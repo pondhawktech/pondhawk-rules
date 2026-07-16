@@ -1,4 +1,7 @@
-﻿namespace Pondhawk.Rules;
+﻿// Copyright (c) Pond Hawk Technologies Inc. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
+
+namespace Pondhawk.Rules;
 
 /// <summary>
 /// An event emitted by a rule consequence — informational message, warning, or validation violation.

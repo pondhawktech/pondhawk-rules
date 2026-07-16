@@ -1,4 +1,7 @@
-﻿using System.Linq.Expressions;
+﻿// Copyright (c) Pond Hawk Technologies Inc. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
+
+using System.Linq.Expressions;
 using Pondhawk.Rules.Builder;
 using Pondhawk.Rules.Util;
 using Pondhawk.Rules.Validators;

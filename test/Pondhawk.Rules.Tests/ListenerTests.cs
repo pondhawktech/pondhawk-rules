@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿// Copyright (c) Pond Hawk Technologies Inc. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
+
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Pondhawk.Rules.Builder;
 using Pondhawk.Rules.Factory;

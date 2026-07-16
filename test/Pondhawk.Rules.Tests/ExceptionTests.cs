@@ -1,4 +1,7 @@
-﻿using Pondhawk.Rules.Exceptions;
+﻿// Copyright (c) Pond Hawk Technologies Inc. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
+
+using Pondhawk.Rules.Exceptions;
 using Pondhawk.Rules.Factory;
 using Shouldly;
 using Xunit;
