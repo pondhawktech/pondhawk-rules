@@ -1,0 +1,70 @@
+# Pondhawk.Rules
+
+> A standalone .NET forward-chaining rule engine by Pond Hawk Technologies with type-based fact matching, a fluent rule/validation API, and weighted decision scoring — plus an EF Core SaveChanges validation adapter. Two packages, both target net8.0, no dependency on other Pondhawk packages.
+
+## Packages
+
+### Pondhawk.Rules — rule engine
+
+Install: `dotnet add package Pondhawk.Rules`
+
+**Key types:**
+- `RuleSet` (`Pondhawk.Rules.Factory`) — runtime rule/validation creation: `.AddRule<T>(name)`, `.AddValidation<T>(name)`, `.Evaluate(facts)`, `.TryValidate(fact, out violations)`, `.Decide(fact)`
+- `Rule<TFact>` — `.When(pred).And(pred).Then(action)`; scoring `.FireAffirm(weight)` / `.FireVeto(weight)` (also `.ThenAffirm` / `.ThenVeto`)
+- `ValidationRule<TFact>` — `.Assert<T>(expr).Required()...` (validators run at very high salience)
+- `RuleBuilder<TFact>` — class-based rule sets (subclass; define rules in the constructor via `Rule()`)
+- `ValidationBuilder<TFact>` — class-based validations
+- `IRuleSet` — evaluate / validate / decide
+- `EvaluationResults` — events, `Score`, violations, timing, fired-rule stats
+- DI: `services.UseRules(assembly)` (also `services.AddRules(...)`) — discovers builders from assemblies
+
+**Rule fluent API:**
+```csharp
+var ruleSet = new RuleSet();
+ruleSet.AddRule<Order>("high-value")
+    .When(o => o.Total > 1000)
+    .And(o => o.Status == "Pending")
+    .Then(o => o.RequiresApproval = true);
+
+var results = ruleSet.Evaluate(order);   // results.TotalFired, results.Events, results.Score
+```
+Rules match across up to 4 fact types. Per-fact predicate overloads enable C# pattern matching:
+```csharp
+ruleSet.AddRule<Person, Order>("gold-discount")
+    .When((Func<Person, bool>)(p => p.Tier is "Gold" or "Platinum"))
+    .And((Func<Order, bool>)(o => o.Total is > 200 and < 10_000))
+    .Then((p, o) => o.DiscountPct = 0.10m);
+```
+
+**Validation:**
+```csharp
+ruleSet.AddValidation<Person>("name").Assert(p => p.Name).Required();
+ruleSet.AddValidation<Person>("email").Assert(p => p.Email).Required().IsEmail();
+bool ok = ruleSet.TryValidate(person, out var violations);
+```
+
+**Scoring / decisions:** `.FireAffirm(w)` / `.FireVeto(w)` accumulate into `Score`; `ruleSet.Decide(fact)` returns bool.
+**Controls:** salience (priority), mutex (only the first matching rule in a group fires), fire-once, inception/expiration.
+**Forward chaining:** modifying/inserting/retracting facts re-triggers evaluation.
+**Authoring guidelines:** avoid `||` in a condition — write one rule per OR branch (atomic, individually traceable); prefer `.And()` chains over `&&`.
+
+### Pondhawk.Rules.EFCore — EF Core SaveChanges validation
+
+Install: `dotnet add package Pondhawk.Rules.EFCore`
+```csharp
+var options = new DbContextOptionsBuilder<AppContext>()
+    .UseSqlServer(connectionString)
+    .AddRuleValidation(ruleSet)
+    .Options;
+```
+`RuleValidationInterceptor : SaveChangesInterceptor` validates all `Added`/`Modified` entities through `IRuleSet.Validate()` before the save reaches the database; throws `EntityValidationException` (structured violations) on failure. Requires EF Core 5.0+ (the release that introduced SaveChanges interception).
+
+## Docs
+- [README.md](README.md) — overview and examples
+- [src/Pondhawk.Rules/README.md](src/Pondhawk.Rules/README.md), [src/Pondhawk.Rules.EFCore/README.md](src/Pondhawk.Rules.EFCore/README.md) — NuGet package readmes
+- [CLAUDE.md](CLAUDE.md) — repository/build guidance
+
+## Technical details
+- Both packages target `net8.0`
+- XML documentation ships inside the NuGet packages (100% public-API coverage; consumers get IntelliSense)
+- MIT licensed; extracted from the pondhawktech/tools monorepo
