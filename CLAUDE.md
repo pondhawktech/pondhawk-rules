@@ -70,4 +70,4 @@ Extracted from the [pondhawktech/tools](https://github.com/pondhawktech/tools) m
 ## CI/CD
 
 - `.github/workflows/build.yml` — builds, tests, packs, and pushes both packages to the `pondhawktech` GitHub Packages feed on pushes to `main`; uploads `.nupkg` artifacts.
-- `.github/workflows/publish.yml` — `workflow_dispatch` that promotes a build's artifacts to **NuGet.org** (requires the `NUGET_ORG_API_KEY` secret; org-level).
+- `.github/workflows/publish.yml` — `workflow_dispatch` that promotes a build's artifacts to **NuGet.org** (uses nuget.org Trusted Publishing; no secret).
