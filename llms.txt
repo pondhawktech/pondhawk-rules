@@ -67,4 +67,4 @@ var options = new DbContextOptionsBuilder<AppContext>()
 ## Technical details
 - Both packages target `net8.0`
 - XML documentation ships inside the NuGet packages (100% public-API coverage; consumers get IntelliSense)
-- MIT licensed; extracted from the pondhawktech/tools monorepo
+- MIT licensed; extracted from the pondhawktech/tools monorepo (now pondhawk-utilities)

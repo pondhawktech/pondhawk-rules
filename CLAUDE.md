@@ -65,7 +65,7 @@ Pre-save entity validation interceptor that hooks into EF Core's `SaveChangesInt
 
 ## History
 
-Extracted from the [pondhawktech/tools](https://github.com/pondhawktech/tools) monorepo, where these lived as `src/Pondhawk.Rules` and `src/Pondhawk.Rules.EFCore`. `Pondhawk.Rules` was consumed there by `Pondhawk.Api` (which stays in `tools` and now references it as a NuGet package). During extraction `Pondhawk.Rules.EFCore` was lowered from `net10.0` to `net8.0` — nothing in it required net10.
+Extracted from the [pondhawktech/tools](https://github.com/pondhawktech/pondhawk-utilities) monorepo (now `pondhawk-utilities`), where these lived as `src/Pondhawk.Rules` and `src/Pondhawk.Rules.EFCore`. `Pondhawk.Rules` was consumed there by `Pondhawk.Api` (now retired; its last version is at the tag `api-final` in `pondhawk-utilities`). During extraction `Pondhawk.Rules.EFCore` was lowered from `net10.0` to `net8.0` — nothing in it required net10.
 
 ## CI/CD
 
