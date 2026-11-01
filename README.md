@@ -175,7 +175,7 @@ dotnet run --project build/Build.csproj -- --target=Pack   # writes ./artifacts/
 
 ## History
 
-Extracted from the [pondhawktech/tools](https://github.com/pondhawktech/tools) monorepo. `Pondhawk.Rules` was consumed there by `Pondhawk.Api` (which stays in `tools` and now references it as a NuGet package). During extraction, `Pondhawk.Rules.EFCore` was lowered from `net10.0` to `net8.0` — nothing in it required net10.
+Extracted from the [pondhawktech/tools](https://github.com/pondhawktech/pondhawk-utilities) monorepo (now `pondhawk-utilities`). `Pondhawk.Rules` was consumed there by `Pondhawk.Api` (now retired; its last version is at the tag `api-final` in `pondhawk-utilities`). During extraction, `Pondhawk.Rules.EFCore` was lowered from `net10.0` to `net8.0` — nothing in it required net10.
 
 ## License
 
