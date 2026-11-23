@@ -21,7 +21,7 @@ internal sealed class RuleNode
 
     private Dictionary<Type, RuleNode> Branches => _branches ??= [];
 
-    private HashSet<string> Namespaces => _namespaces ??= [];
+    private HashSet<string> Namespaces => _namespaces ??= new(StringComparer.Ordinal);
 
     public HashSet<IRule> Rules => _rules ??= [];
 
