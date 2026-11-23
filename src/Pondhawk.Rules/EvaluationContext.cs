@@ -49,7 +49,7 @@ public sealed class EvaluationContext
 
         MaxViolations = int.MaxValue;
 
-        Mutexed = [];
+        Mutexed = new(StringComparer.Ordinal);
         FireOnceRules = new();
 
     }
