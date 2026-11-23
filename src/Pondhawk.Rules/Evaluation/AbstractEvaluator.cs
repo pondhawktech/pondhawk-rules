@@ -46,6 +46,9 @@ public abstract class AbstractEvaluator : IEvaluator
         var plan = new EvaluationPlan(GetRuleBase(), GetNamespaces(), context.Space);
         plan.Build();
 
+        // Save the caller's context so a nested evaluation (a consequence that
+        // evaluates another rule set) restores it instead of clearing it
+        var previousContext = RuleThreadLocalStorage.CurrentContext;
         RuleThreadLocalStorage.CurrentContext = context;
 
         context.Results.Started = DateTime.Now;
@@ -138,8 +141,8 @@ public abstract class AbstractEvaluator : IEvaluator
 
             context.Listener.EndEvaluation();
 
-            // Clear the current context from TLS
-            RuleThreadLocalStorage.ClearCurrentContext();
+            // Restore the caller's context (null for a top-level evaluation)
+            RuleThreadLocalStorage.CurrentContext = previousContext;
 
         }
 
