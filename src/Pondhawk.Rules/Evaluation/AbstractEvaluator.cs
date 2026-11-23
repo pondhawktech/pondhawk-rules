@@ -51,15 +51,21 @@ public abstract class AbstractEvaluator : IEvaluator
         var previousContext = RuleThreadLocalStorage.CurrentContext;
         RuleThreadLocalStorage.CurrentContext = context;
 
-        context.Results.Started = DateTime.Now;
-        context.StartedTick = Environment.TickCount64;
-
-        context.Listener.BeginEvaluation();
+        // Everything after the context is set runs inside the try, so the
+        // finally restores the caller's context even when a listener throws.
+        // EndEvaluation is called only if BeginEvaluation succeeded.
+        var evaluationBegun = false;
 
         //**************************************************
 
         try
         {
+            context.Results.Started = DateTime.Now;
+            context.StartedTick = Environment.TickCount64;
+
+            context.Listener.BeginEvaluation();
+            evaluationBegun = true;
+
             int lastSignature = 0;
             TupleEvaluator evaluator = null;
 
@@ -136,13 +142,20 @@ public abstract class AbstractEvaluator : IEvaluator
         finally
         {
 
-            // Stop the evaluation timer
-            context.Results.Completed = DateTime.Now;
+            try
+            {
+                // Stop the evaluation timer
+                context.Results.Completed = DateTime.Now;
 
-            context.Listener.EndEvaluation();
-
-            // Restore the caller's context (null for a top-level evaluation)
-            RuleThreadLocalStorage.CurrentContext = previousContext;
+                if (evaluationBegun)
+                    context.Listener.EndEvaluation();
+            }
+            finally
+            {
+                // Restore the caller's context (null for a top-level evaluation),
+                // even if EndEvaluation throws
+                RuleThreadLocalStorage.CurrentContext = previousContext;
+            }
 
         }
 
