@@ -31,7 +31,7 @@ namespace Pondhawk.Rules.Factory;
 /// </example>
 public sealed class RuleSet : AbstractRuleSet
 {
-    private readonly HashSet<string> _namespaces = [];
+    private readonly HashSet<string> _namespaces = new(StringComparer.Ordinal);
     private readonly RuleTree _tree = new();
 
     /// <summary>Gets the underlying rule base for this rule set.</summary>
